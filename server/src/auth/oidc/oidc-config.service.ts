@@ -113,15 +113,17 @@ export class OidcConfigService {
    * Used by OIDC callback URL, frontend redirects, and redirect validation.
    */
   getAppUrl(): string {
-    return this.configService.get<string>('APP_URL') || 'http://localhost:3000';
+    const raw =
+      this.configService.get<string>('APP_URL')?.trim() ||
+      'http://localhost:3000';
+    return raw.replace(/\/+$/, '');
   }
 
   /**
    * OIDC redirect URI
    */
   getOidcCallbackUrl(): string {
-    const base = this.getAppUrl().replace(/\/+$/, '');
-    return `${base}/api/auth/oidc/callback`;
+    return `${this.getAppUrl()}/api/auth/oidc/callback`;
   }
 
   /**
